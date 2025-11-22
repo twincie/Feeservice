@@ -1,3 +1,7 @@
+logging:
+  level:
+    com.fee.fee: DEBUG
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/feeservice
@@ -6,7 +10,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
     show-sql: true
 
 app:
-  default-tenant: default
+  tenant:
+    default-tenant-id: "default-tenant"
+    default-tenant-name: "Default Tenant"

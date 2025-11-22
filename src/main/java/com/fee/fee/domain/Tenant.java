@@ -1,12 +1,13 @@
 package com.fee.fee.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

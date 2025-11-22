@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,24 +14,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FeeRange {
+@Table(name = "channels")
+public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private Fee fee;
-
     @Column(nullable = false)
-    private BigDecimal minAmount;
+    private String name;
 
-    private BigDecimal maxAmount;
+    @Column(nullable = false, unique = true)
+    private String code;
 
-    @Column(nullable = false)
-    private BigDecimal amount;
+    private String description;
 
-    private BigDecimal rate;
+    @Builder.Default
+    private Boolean isActive = true;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

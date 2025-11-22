@@ -1,14 +1,15 @@
 package com.fee.fee.controller;
 
-import com.fee.fee.domain.TransactionChannel;
+import com.fee.fee.domain.Channel;
 import com.fee.fee.dto.ApiResponse;
-import com.fee.fee.repository.TransactionChannelRepository;
+import com.fee.fee.repository.ChannelRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,43 +18,43 @@ import java.util.List;
 @Validated
 public class TransactionChannelController {
 
-    private final TransactionChannelRepository repo;
+    private final ChannelRepository repo;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TransactionChannel>>> list() {
+    public ResponseEntity<ApiResponse<List<Channel>>> list() {
         return ResponseEntity.ok(new ApiResponse<>("success", "Channels retrieved", repo.findAll()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<TransactionChannel>> get(@PathVariable Long id) {
-        TransactionChannel channel = repo.findById(id)
+    public ResponseEntity<ApiResponse<Channel>> get(@PathVariable Long id) {
+        Channel channel = repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Channel not found: " + id));
-        return ResponseEntity.ok(new ApiResponse<>("success","Channel found", channel));
+        return ResponseEntity.ok(new ApiResponse<>("success","Channel found", Collections.singletonList(channel)));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<TransactionChannel>> create(
-            @Valid @RequestBody TransactionChannel channel) {
+    public ResponseEntity<ApiResponse<Channel>> create(
+            @Valid @RequestBody Channel channel) {
         if (repo.existsByCode(channel.getCode())) {
             throw new IllegalArgumentException("Channel code already exists: " + channel.getCode());
         }
-        TransactionChannel saved = repo.save(channel);
-        return ResponseEntity.ok(new ApiResponse<>("fail","Channel created", saved));
+        Channel saved = repo.save(channel);
+        return ResponseEntity.ok(new ApiResponse<>("fail","Channel created", Collections.singletonList(saved)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<TransactionChannel>> update(
+    public ResponseEntity<ApiResponse<Channel>> update(
             @PathVariable Long id,
-            @Valid @RequestBody TransactionChannel channel) {
+            @Valid @RequestBody Channel channel) {
         if (!repo.existsById(id)) {
             throw new IllegalArgumentException("Channel not found: " + id);
         }
-        if (repo.existsByCode(channel.getCode()) && !repo.findByCode(channel.getCode()).get().getId().equals(id)) {
+        if (repo.existsByCode(channel.getCode()) && !repo.findByCode(channel.getCode()).getFirst().getId().equals(id)) {
             throw new IllegalArgumentException("Channel code already exists: " + channel.getCode());
         }
         channel.setId(id);
-        TransactionChannel updated = repo.save(channel);
-        return ResponseEntity.ok(new ApiResponse<>("success","Channel updated", updated));
+        Channel updated = repo.save(channel);
+        return ResponseEntity.ok(new ApiResponse<>("success","Channel updated", Collections.singletonList(updated)));
     }
 
     @DeleteMapping("/{id}")

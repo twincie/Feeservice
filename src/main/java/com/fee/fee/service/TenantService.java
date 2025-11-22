@@ -1,9 +1,8 @@
-package com.fee.fee.tenent;
+package com.fee.fee.service;
 
 import com.fee.fee.domain.Tenant;
 import com.fee.fee.repository.TenantRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.stereotype.Service;
 
 @Service
